@@ -6,14 +6,12 @@ def valid_choice?(choice)
 end
 
 def get(host, path)
-	http = Net::HTTP.new(host, 80)
-	http.get(path)
+	
 end
 
 def post(host, path, details)
 	 #headers = "Content-Type: application/x-www-form-urlencoded\nContent-Length: #{details.length}"
-	 http = Net::HTTP.new(host, 80)
-	 http.post(path, details)
+	 
 end
 
 choice = ""
@@ -26,7 +24,8 @@ response = case choice.downcase
 when "g"
 	host = 'localhost'
 	path = '/index.html'
-	get(host, path)
+	http = Net::HTTP.new(host)
+	http.get(path)
 when "p"
 	host = 'localhost'
 	path = '/thanks.html'
@@ -35,7 +34,9 @@ when "p"
 	puts "Please give an email:"
 	email = gets.chomp
 	details = {viking: {name: name, email: email}}.to_json
-	post(host, path, details)
+	headers = {'Content-Length' => details.length.to_s}
+	http = Net::HTTP.new(host)
+	http.post(path, details, headers)
 end
 
 if response.code == "200"
